@@ -1,0 +1,50 @@
+D'accord, voici un exemple plus simple :
+
+Supposons que nous ayons une liste de tâches à effectuer, comme lire des fichiers, télécharger des données sur Internet, et les enregistrer dans une base de données. Nous voulons effectuer ces tâches de manière asynchrone pour optimiser le temps d'exécution. Voici comment nous pourrions le faire avec async et await :
+
+python
+Copy code
+import asyncio
+
+async def read_file(file_name):
+    print("Lecture du fichier :", file_name)
+    # Supposons que cette fonction prend du temps pour lire un fichier
+    await asyncio.sleep(2)
+    print("Fichier lu :", file_name)
+
+async def download_data(url):
+    print("Téléchargement des données depuis :", url)
+    # Supposons que cette fonction prend du temps pour télécharger des données
+    await asyncio.sleep(3)
+    print("Données téléchargées depuis :", url)
+
+async def save_to_database(data):
+    print("Enregistrement des données dans la base de données :", data)
+    # Supposons que cette fonction prend du temps pour enregistrer les données
+    await asyncio.sleep(1)
+    print("Données enregistrées dans la base de données :", data)
+
+async def main():
+    # Lancer plusieurs tâches en parallèle
+    tasks = [
+        read_file("example.txt"),
+        download_data("http://example.com/data"),
+        save_to_database("example_data")
+    ]
+    # Attendre que toutes les tâches soient terminées
+    await asyncio.gather(*tasks)
+    print("Toutes les tâches sont terminées.")
+
+# Lancer l'application
+asyncio.run(main())
+Dans cet exemple :
+
+Chaque fonction (read_file, download_data, save_to_database) est définie comme une fonction asynchrone avec async.
+À l'intérieur de chaque fonction, nous utilisons await pour suspendre l'exécution de la fonction pendant que nous attendons l'achèvement d'une tâche asynchrone, comme lire un fichier, télécharger des données ou enregistrer dans une base de données.
+Dans la fonction main, nous lançons toutes les tâches en parallèle à l'aide de asyncio.gather(*tasks), qui attend ensuite que toutes les tâches soient terminées avant de continuer.
+En lançant toutes ces tâches de manière asynchrone, nous optimisons le temps d'exécution global du programme, car chaque tâche peut être exécutée simultanément.
+
+
+
+
+

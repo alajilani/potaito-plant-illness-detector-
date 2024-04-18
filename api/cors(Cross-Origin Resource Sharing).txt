@@ -1,0 +1,66 @@
+CORS, ou Cross-Origin Resource Sharing, est un mécanisme de sécurité implémenté par les navigateurs web pour contrôler les requêtes HTTP entre différentes origines, telles que les serveurs back-end et les applications front-end.
+
+Lorsque vous développez une application web, votre front-end (généralement exécuté dans le navigateur) peut être hébergé sur un domaine différent de celui de votre back-end (par exemple, votre API). Par défaut, les navigateurs appliquent la politique de même origine, ce qui signifie qu'ils n'autorisent pas les requêtes entre différentes origines. Cela peut poser problème lorsque votre front-end souhaite effectuer des requêtes vers votre back-end.
+
+CORS résout ce problème en permettant au serveur de définir quels domaines peuvent accéder à ses ressources via des entêtes HTTP spécifiques. Voici comment cela fonctionne :
+
+Lorsqu'une requête est effectuée depuis le front-end vers le back-end, le navigateur inclut un en-tête Origin qui indique l'origine de la requête.
+Le serveur back-end peut alors répondre avec des en-têtes CORS spécifiant les domaines autorisés à accéder à ses ressources. Ces en-têtes sont généralement définis dans la réponse HTTP avec des valeurs telles que Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers, etc.
+Si le serveur autorise l'origine de la requête (définie dans l'en-tête Origin), le navigateur laisse passer la réponse et le front-end peut accéder aux données. Sinon, il bloque la réponse pour des raisons de sécurité.
+Pour permettre les requêtes CORS entre votre front-end et votre back-end, vous devrez généralement configurer votre serveur back-end pour inclure les en-têtes CORS appropriés dans les réponses aux requêtes HTTP. Cela peut être fait en utilisant des modules middleware dans des frameworks comme Express.js pour Node.js, ou en configurant directement votre serveur web (comme Apache ou Nginx) pour inclure ces en-têtes.
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+exemplllle:
+
+Dans ce code, le middleware CORS est utilisé pour autoriser les requêtes depuis des origines spécifiques vers votre API FastAPI. Voici comment cela fonctionne dans le contexte de votre application :
+
+Importation du Middleware CORS :
+
+Vous importez le middleware CORS de FastAPI pour gérer les politiques CORS dans votre application :
+
+python
+Copy code
+from fastapi.middleware.cors import CORSMiddleware
+Définition des origines autorisées :
+
+Vous spécifiez les origines (ou domaines) qui sont autorisées à accéder à votre API. Dans cet exemple, vous autorisez les requêtes provenant de http://localhost et http://localhost:3000 :
+
+python
+Copy code
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+Ajout du Middleware CORS à l'application FastAPI :
+
+Vous ajoutez le middleware CORS à votre application FastAPI avec les origines autorisées, en spécifiant également d'autres paramètres comme la prise en charge des méthodes et des en-têtes :
+
+python
+Copy code
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+allow_origins: Liste des origines autorisées.
+allow_credentials: Autorise l'envoi de cookies ou d'informations d'authentification avec la demande.
+allow_methods: Liste des méthodes HTTP autorisées (dans ce cas, toutes les méthodes sont autorisées avec "*").
+allow_headers: Liste des en-têtes HTTP autorisés (dans ce cas, tous les en-têtes sont autorisés avec "*").
+Traitement des requêtes dans votre API FastAPI :
+
+Votre application FastAPI continue de fonctionner normalement, traitant les requêtes et fournissant des réponses appropriées. Dans cet exemple, la route /predict est utilisée pour effectuer des prédictions sur une image téléchargée.
+
+En résumé, le middleware CORS dans votre application FastAPI vous permet de contrôler les accès autorisés depuis des origines spécifiques, garantissant ainsi la sécurité et la protection contre les attaques de type CSRF (Cross-Site Request Forgery). Cela vous permet également de construire des applications web qui interagissent de manière sécurisée avec des clients sur différents domaines.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+pourquoi http://localhost est autoriseé dans origins ?
+
+Autoriser http://localhost dans les paramètres CORS est une pratique courante lors du développement d'applications web. Voici quelques raisons à cela :
+
+Développement local : Lorsque vous développez une application web localement sur votre machine, le serveur de développement est généralement hébergé sur http://localhost. Autoriser cette origine permet à votre front-end (qui fonctionne également localement) de communiquer avec votre API back-end sans rencontrer de problèmes de CORS. Cela facilite le développement et le test de votre application localement.
+
+
